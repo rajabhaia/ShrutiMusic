@@ -1,25 +1,3 @@
-# Copyright (c) 2025 Nand Yaduwanshi <NoxxOP>
-# Location: Supaul, Bihar
-#
-# All rights reserved.
-#
-# This code is the intellectual property of Nand Yaduwanshi.
-# You are not allowed to copy, modify, redistribute, or use this
-# code for commercial or personal projects without explicit permission.
-#
-# Allowed:
-# - Forking for personal learning
-# - Submitting improvements via pull requests
-#
-# Not Allowed:
-# - Claiming this code as your own
-# - Re-uploading without credit or permission
-# - Selling or using commercially
-#
-# Contact for permissions:
-# Email: badboy809075@gmail.com
-
-
 from pyrogram import filters
 from pyrogram.types import InlineKeyboardMarkup, Message
 
@@ -30,7 +8,7 @@ from ShrutiMusic.utils.inline.settings import playmode_users_markup
 from config import BANNED_USERS
 
 
-@app.on_message(filters.command(["playmode", "mode"]) & filters.group & ~BANNED_USERS)
+@app.on_message(filters.command(["playmode" , "mode" ] ,prefixes=["/", "!", "%", ",", "", ".", "@", "#"]) & filters.group & ~BANNED_USERS)
 @language
 async def playmode_(client, message: Message, _):
     playmode = await get_playmode(message.chat.id)
