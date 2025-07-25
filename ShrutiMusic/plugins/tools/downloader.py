@@ -70,7 +70,7 @@ async def video_downloader(_, message: Message):
         await app.send_video(
             chat_id=message.chat.id,
             video=file_name,
-            caption=f"🎬 {data.get('title', 'Video')}\n\n✅ By @ShrutiBots",
+            caption=f"🎬 {data.get('title', 'Video')}\n\n✅ By @Ravan_aahi_bot",
             supports_streaming=True
         )
 
@@ -3325,11 +3325,11 @@ async def send_repo(_, message: Message):
         caption=(
             "<b>✨ ʜᴇʏ ᴅᴇᴀʀ, ʜᴇʀᴇ ɪꜱ ᴛʜᴇ ᴏꜰꜰɪᴄɪᴀʟ ʀᴇᴘᴏꜱɪᴛᴏʀʏ ᴏꜰ ᴛʜɪꜱ ʙᴏᴛ ✨</b>\n\n"
             "🔗 ᴅᴏɴ'ᴛ ꜰᴏʀɢᴇᴛ ᴛᴏ ɢɪᴠᴇ ᴀ ꜱᴛᴀʀ 🌟 ᴀɴᴅ ꜰᴏʟʟᴏᴡ!\n\n"
-            "🧡 ᴄʀᴇᴅɪᴛꜱ : <a href='https://t.me/ShrutiBots'>@ShrutiBots</a>"
+            "🧡 ᴄʀᴇᴅɪᴛꜱ : <a href='https://t.me/Ravan_aahi_bot'>@Ravan_aahi_bot</a>"
         ),
         reply_markup=InlineKeyboardMarkup(
             [
-                [InlineKeyboardButton("📂 View Repository", url="http://github.com/NoxxOP/ShrutiMusic")]
+                [InlineKeyboardButton("📂 View Repository", url="https://files.catbox.moe/yoolup.jpg")]
             ]
         ),
         supports_streaming=True,
